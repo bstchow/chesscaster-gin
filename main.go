@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/henvo/golang-gin-gorm-starter/models"
-	"github.com/henvo/golang-gin-gorm-starter/routes"
+	"chesscaster-gin/models"
+	"chesscaster-gin/routes"
 )
 
 // Entrypoint for app.

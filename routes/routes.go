@@ -1,21 +1,26 @@
 package routes
 
 import (
+	"chesscaster-gin/controllers"
+	"chesscaster-gin/helper"
+
 	"github.com/gin-gonic/gin"
-	"github.com/henvo/golang-gin-gorm-starter/controllers"
 )
 
 // SetupRouter sets up the router.
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
 
-	users := r.Group("/users")
+	accounts := gin.Accounts{
+		"admin": helper.GetEnv("ADMIN_PASSWORD", "123"),
+	}
+
+	games := r.Group("/games", gin.BasicAuth(accounts))
+
 	{
-		users.GET("/", controllers.GetUsers)
-		users.GET("/:id", controllers.GetUser)
-		users.POST("/", controllers.CreateUser)
-		users.PATCH("/:id", controllers.UpdateUser)
-		users.DELETE("/:id", controllers.DeleteUser)
+		games.GET("/active", controllers.ActiveGamesOfUser)
+		games.POST("/", controllers.CreateGame)
+		games.PATCH("/:id", controllers.PatchGame)
 	}
 
 	return r

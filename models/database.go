@@ -1,9 +1,10 @@
 package models
 
 import (
+	"chesscaster-gin/helper"
 	"fmt"
-	"github.com/henvo/golang-gin-gorm-starter/helper"
-	"gorm.io/driver/mysql"
+
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -12,20 +13,19 @@ var DB *gorm.DB
 
 // SetupDatabase migrates and sets up the database.
 func SetupDatabase() {
-	u := helper.GetEnv("DATABASE_USER", "golang")
-	p := helper.GetEnv("DATABSE_PASSWORD", "golang")
-	h := helper.GetEnv("DATABASE_HOST", "localhost:3306")
-	n := helper.GetEnv("DATABASE_NAME", "go_test")
-	q := "charset=utf8mb4&parseTime=True&loc=Local"
+	user := helper.GetEnv("DATABASE_USER", "chesscaster")
+	pw := helper.GetEnv("DATABASE_PASSWORD", "")
+	host := helper.GetEnv("DATABASE_HOST", "localhost:5432")
+	dbName := helper.GetEnv("DATABASE_NAME", "chesscaster")
 
 	// Assemble the connection string.
-	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?%s", u, p, h, n, q)
+	dbUrl := fmt.Sprintf("postgres://%s:%s@%s/%s", user, pw, host, dbName)
 
 	// Connect to the database.
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(dbUrl), &gorm.Config{})
 
 	// Migrate the schema
-	db.AutoMigrate(&User{})
+	db.AutoMigrate(&Game{})
 
 	if err != nil {
 		panic("Could not open database connection")

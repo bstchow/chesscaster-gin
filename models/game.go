@@ -49,7 +49,7 @@ func CreateGame(game *Game) (err error) {
 
 // PatchGame patches an existing game.
 func PatchGame(game *Game) (err error) {
-	tx := DB.Where("id = ?", game.ID).Limit(1).Save(game)
+	tx := DB.Where("id = ?", game.ID).Limit(1).Updates(game)
 
 	fmt.Printf("Rows affected: %d", tx.RowsAffected)
 
